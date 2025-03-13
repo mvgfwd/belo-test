@@ -11,7 +11,7 @@ import { PageContentHeader } from '@/components/page-content-header';
 import { getErrorMsg } from '@/utils/helpers/get-error-message';
 import { StudentFilter, StudentFilterSchema } from '../types';
 import { FilterStudent } from '../components/forms';
-import { UserAccountBasic } from '@/components/user-account-basic';
+import { UserAccountBasic, UserAccountBasicProps } from '@/components/user-account-basic';
 import { useGetStudentsQuery } from '../api/student-api';
 
 const initialState = {
@@ -27,7 +27,7 @@ export const ListStudents: React.FC = () => {
     resolver: zodResolver(StudentFilterSchema)
   });
 
-  const [filter, setFilter] = React.useState<StudentFilter>({});
+  const [filter, setFilter] = React.useState<StudentFilter>(initialState);
   const { data, isLoading, isError, error } = useGetStudentsQuery(filter);
 
   const searchStudent = (payload: StudentFilter) => {
@@ -59,7 +59,7 @@ export const ListStudents: React.FC = () => {
           isLoading,
           isError,
           error: getErrorMsg(error as FetchBaseQueryError | SerializedError).message,
-          users: data?.students || []
+          users: data as unknown as UserAccountBasicProps[] || []
         }}
       />
     </>
